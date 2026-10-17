@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CISSP 2027 Prep</title>
+<meta name="description" content="Free, browser-based CISSP study companion for the April 2027 exam outline: a 27-week plan, objective checklist, practice questions focused on 2027 changes and manager-mindset scenarios, flashcards, and a miss log. Runs entirely client-side.">
+<style>
+  :root {
+    --paper:#faf9f7; --ink:#1c1d1f; --soft:#5c6066; --faint:#8a8e95;
+    --line:#e4e2dd; --accent:#28415d; --surface:#f3f1ec;
+    --good:#2e7d52; --bad:#b23b3b; --warn:#9a6a10; --new:#7a4fb0;
+    --serif:"Newsreader",Georgia,serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper:#14161a; --ink:#ececea; --soft:#a8aeb6; --faint:#7d838b;
+      --line:#2a2e35; --accent:#8fb3dd; --surface:#1a1d23; --good:#5cc78c; --bad:#e98686; --warn:#e0bd6a; --new:#c3a2ef; }
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.6; font-size:16px; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:860px; margin:0 auto; padding:0 16px 80px; }
+  header.top { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:24px 0 12px; border-bottom:1px solid var(--line); }
+  .brand { font-family:var(--serif); font-size:24px; font-weight:600; color:var(--ink); margin-right:auto; }
+  .brand b { color:var(--accent); }
+  nav { display:flex; gap:2px; flex-wrap:wrap; }
+  nav button { font-family:var(--sans); font-size:14px; background:none; border:none; color:var(--soft); padding:8px 11px; border-radius:8px; cursor:pointer; }
+  nav button:hover { background:var(--surface); color:var(--ink); }
+  nav button.active { background:var(--surface); color:var(--ink); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:500; font-size:30px; margin:28px 0 6px; }
+  h2 { font-family:var(--serif); font-weight:500; font-size:21px; margin:22px 0 10px; }
+  .lede { color:var(--soft); margin-bottom:20px; }
+
+  .card { border:1px solid var(--line); border-radius:12px; padding:18px 20px; background:var(--surface); margin-bottom:16px; }
+  .card h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+  button.btn { font-family:var(--sans); font-size:14.5px; border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:9px; padding:10px 16px; cursor:pointer; transition:border-color .15s; }
+  button.btn:hover { border-color:var(--accent); }
+  button.btn.primary { background:var(--accent); color:var(--paper); border-color:var(--accent); font-weight:500; }
+  button.btn.small { font-size:13px; padding:6px 11px; }
+  button.link { background:none; border:none; color:var(--accent); cursor:pointer; font-size:13px; font-family:var(--sans); }
+  select, input[type=text], textarea { font-family:var(--sans); font-size:14px; padding:8px 11px; border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink); }
+  select, input[type=text], label.fld { max-width:100%; min-width:0; }
+  textarea { width:100%; min-height:60px; resize:vertical; }
+  label.fld { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--faint); text-transform:uppercase; letter-spacing:.6px; }
+  label.chk { display:flex; gap:7px; align-items:center; font-size:14px; color:var(--soft); cursor:pointer; padding-bottom:8px; }
+
+  .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
+  .stat { border:1px solid var(--line); border-radius:10px; padding:12px 14px; background:var(--paper); }
+  .stat .v { font-family:var(--serif); font-size:26px; font-weight:600; }
+  .stat .k { font-size:11.5px; color:var(--faint); text-transform:uppercase; letter-spacing:.8px; margin-top:2px; }
+  .dombar { margin:9px 0; }
+  .dombar .lbl { display:flex; justify-content:space-between; gap:10px; font-size:13.5px; margin-bottom:4px; }
+  .dombar .lbl span:last-child { color:var(--soft); white-space:nowrap; }
+  .track { height:8px; background:var(--line); border-radius:100px; overflow:hidden; }
+  .fill { height:100%; background:var(--accent); border-radius:100px; }
+
+  .today { border-left:4px solid var(--accent); }
+  .today .when { font-size:12px; color:var(--faint); text-transform:uppercase; letter-spacing:.8px; }
+  .today .what { font-size:17px; font-weight:500; margin:4px 0; }
+
+  .badge { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.5px; color:var(--accent); border:1px solid currentColor; border-radius:100px; padding:1px 8px; vertical-align:middle; white-space:nowrap; }
+  .badge.new { color:var(--new); }
+  .badge.mind { color:var(--warn); }
+
+  /* plan */
+  table.plan { width:100%; border-collapse:collapse; font-size:14px; }
+  table.plan td { padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.plan tr.cur td { background:color-mix(in srgb, var(--accent) 10%, transparent); }
+  table.plan tr.done td { color:var(--faint); }
+  table.plan .wk { font-weight:600; white-space:nowrap; }
+  table.plan .dt { color:var(--soft); white-space:nowrap; font-size:13px; }
+  .phase { font-size:12px; color:var(--faint); }
+
+  /* objectives */
+  .obj { border-top:1px solid var(--line); padding:10px 0; }
+  .obj:first-of-type { border-top:none; }
+  .obj-head { display:flex; gap:10px; align-items:flex-start; }
+  .obj-n { font-weight:700; min-width:36px; color:var(--accent); }
+  .obj-t { flex:1; font-size:14.5px; }
+  .rate { display:flex; gap:3px; flex-shrink:0; }
+  .rate button { font-size:12px; border:1px solid var(--line); background:var(--paper); color:var(--soft); border-radius:6px; padding:3px 8px; cursor:pointer; font-family:var(--sans); }
+  .rate button.on.r1 { background:var(--bad); color:var(--paper); border-color:var(--bad); }
+  .rate button.on.r2 { background:var(--warn); color:var(--paper); border-color:var(--warn); }
+  .rate button.on.r3 { background:var(--good); color:var(--paper); border-color:var(--good); }
+  .obj ul { margin:6px 0 0 46px; font-size:13.5px; color:var(--soft); }
+  .obj li { margin:2px 0; }
+  .obj li.n { color:var(--ink); }
+  .obj .note { margin:4px 0 0 46px; font-size:13px; color:var(--new); }
+
+  /* quiz */
+  .qmeta { display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:13px; color:var(--faint); margin-bottom:8px; }
+  .qmeta .sp { margin-left:auto; }
+  .qtext { font-size:18px; font-weight:500; margin:8px 0 16px; line-height:1.5; }
+  .opt { display:block; width:100%; text-align:left; border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:10px; padding:12px 15px; margin-bottom:9px; cursor:pointer; font-size:15px; font-family:var(--sans); }
+  .opt:hover:not(:disabled) { border-color:var(--accent); }
+  .opt.correct { border-color:var(--good); background:color-mix(in srgb, var(--good) 12%, transparent); }
+  .opt.wrong { border-color:var(--bad); background:color-mix(in srgb, var(--bad) 12%, transparent); }
+  .opt:disabled { cursor:default; }
+  .explain { border-left:3px solid var(--accent); padding:10px 14px; margin:6px 0 14px; font-size:14.5px; color:var(--soft); background:var(--paper); border-radius:0 8px 8px 0; }
+  .explain b { color:var(--ink); }
+  .why { border:1px dashed var(--bad); border-radius:10px; padding:12px 14px; margin-bottom:14px; }
+  .why p { font-size:14px; margin-bottom:8px; }
+  .progress-line { height:5px; background:var(--line); border-radius:100px; overflow:hidden; margin-bottom:14px; }
+  .progress-line .p { height:100%; background:var(--accent); transition:width .25s; }
+
+  /* misses */
+  table.miss { width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.miss th { text-align:left; font-size:11.5px; color:var(--faint); text-transform:uppercase; letter-spacing:.6px; padding:6px; border-bottom:1px solid var(--line); }
+  table.miss td { padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .kind-dk { color:var(--bad); font-weight:600; }
+  .kind-eng { color:var(--warn); font-weight:600; }
+  .tablewrap { overflow-x:auto; }
+
+  /* flashcards */
+  .flash-inner { position:relative; min-height:230px; border:1px solid var(--line); border-radius:14px; background:var(--paper); display:flex; align-items:center; justify-content:center; text-align:center; padding:40px 28px; cursor:pointer; }
+  .flash-inner:hover { border-color:var(--accent); }
+  .flash .term { font-family:var(--serif); font-size:26px; font-weight:600; }
+  .flash .def { font-size:16.5px; color:var(--soft); line-height:1.55; }
+  .flash .hint { position:absolute; bottom:12px; font-size:11px; color:var(--faint); letter-spacing:.5px; text-transform:uppercase; }
+  .flash .tl { position:absolute; top:12px; left:14px; display:flex; gap:6px; }
+
+  .muted { color:var(--soft); font-size:14px; }
+  .center { text-align:center; }
+  .about p, .about li { margin-bottom:10px; color:var(--soft); }
+  .about ul { margin-left:20px; }
+  footer { margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:13px; color:var(--faint); }
+  footer a, .about a { color:var(--accent); text-decoration:none; }
+  @media (max-width:560px) {
+    .obj-head { flex-wrap:wrap; }
+    .rate { flex-basis:100%; padding-left:46px; }
+    h1 { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">CISSP <b>2027</b> Prep</div>
+    <nav>
+      <button data-route="dash" class="active">Today</button>
+      <button data-route="plan">Plan</button>
+      <button data-route="obj">Objectives</button>
+      <button data-route="quiz">Quiz</button>
+      <button data-route="miss">Miss log</button>
+      <button data-route="cards">Flashcards</button>
+      <button data-route="about">About</button>
+    </nav>
+  </header>
+  <main id="app"></main>
+  <footer>
+    Unofficial study aid for the CISSP exam outline effective April 15, 2027. All questions are original and contain no real exam content.
+    CISSP and ISC2 are registered marks of ISC2, Inc.; this project is not affiliated with or endorsed by ISC2.
+    Runs entirely in your browser. Built by <a href="https://cloudanimal.github.io" target="_blank" rel="noopener">Joe Cook</a>.
+  </footer>
+</div>
+
+<script src="data/objectives.js"></script>
+<script src="data/questions.js"></script>
+<script src="data/flashcards.js"></script>
+<script>
+(function () {
+  "use strict";
+  var OBJ = window.CISSP_OBJECTIVES || [];
+  var Q = window.CISSP_QUESTIONS || [];
+  var FC = window.CISSP_FLASHCARDS || [];
+  var app = document.getElementById("app");
+  var STORE = "cissp2027-prep-v1";
+  var PLAN_START = new Date(2026, 9, 19); // Monday, October 19, 2026
+  var WEEKS = 27;
+  var DOM = {}; OBJ.forEach(function(d){ DOM[d.n] = d; });
+  var DOMAIN_WEEK = {3:2, 4:4, 8:6, 5:8, 2:10, 1:11, 6:13, 7:14}; // first plan week for each domain
+
+  // ---------- helpers ----------
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function blank(){ return {answers:{}, ratings:{}, weeks:{}, misses:[], flags:{}}; }
+  function load(){
+    try{
+      var p = JSON.parse(localStorage.getItem(STORE));
+      if(!p || typeof p!=="object") return blank();
+      var b = blank(); for(var k in b){ if(p[k]==null) p[k]=b[k]; }
+      return p;
+    }catch(e){ return blank(); }
+  }
+  var S = load();
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){} }
+  function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function fmt(d){ return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+  function dname(n){ return "D"+n+" "+(DOM[n]?DOM[n].name:""); }
+  function isNewItem(s){ return s.charAt(0)==="+"; }
+  function itemText(s){ return isNewItem(s)?s.slice(1):s; }
+  function objHasNew(o){ return !!o.note || o.items.some(isNewItem); }
+  function allObjectives(){ var a=[]; OBJ.forEach(function(d){ d.objectives.forEach(function(o){ a.push({d:d.n,o:o}); }); }); return a; }
+
+  // ---------- plan model ----------
+  var FOCUS = {1:"Baseline: self-rate objectives, diagnostic, mindset primer",2:"D3 Architecture and Engineering",3:"D3 Architecture and Engineering",4:"D4 Communication and Network",5:"D4 Communication and Network",6:"D8 Software Development",7:"D8 Software Development",8:"D5 Identity and Access Management",9:"D5 Identity and Access Management",10:"D2 Asset Security",11:"D1 Governance and Risk",12:"D1 Governance and Risk",13:"D6 Assessment and Testing",14:"D7 Security Operations"};
+  function phaseOf(w){ if(w===1) return {n:0,name:"Phase 0: Baseline"}; if(w<=14) return {n:1,name:"Phase 1: Domain pass"}; if(w<=21) return {n:2,name:"Phase 2: 2027 delta drill"}; return {n:3,name:"Phase 3: Exam simulation"}; }
+  function focusOf(w){
+    if(FOCUS[w]) return FOCUS[w];
+    if(w<=21) return "2027 changes (Mon, Tue) and timed mixed sets (Wed, Thu)";
+    if(w===27) return "Light review only: mind maps and your miss log. Book the exam once the readiness bar is met.";
+    return "Practice exam "+(w-21)+" of 6 in three one-hour blocks, then review and drill";
+  }
+  function weekOf(date){ var diff=Math.floor((date - PLAN_START)/86400000); return Math.floor(diff/7)+1; }
+  function session(w, dow){
+    if(dow===0 || dow===6){
+      return w>=22 && w<=26 ? "Rest day. Optional: one of your two unbroken 3-hour stamina sittings." : "Rest day.";
+    }
+    var ph = phaseOf(w).n;
+    if(ph===0){ return ["","Self-rate Domains 1 to 4 on the Objectives tab","Self-rate Domains 5 to 8 on the Objectives tab","Diagnostic: first 50 mixed questions (official practice tests)","Diagnostic: second 50 mixed questions, then log every miss","Read or watch a \"think like a manager\" primer"][dow]; }
+    if(ph===1){ return dow===5 ? "Miss log review, then flashcards for anything missed twice" : "20 minutes reading on "+FOCUS[w]+", then 40 minutes of domain questions"; }
+    if(ph===2){ return ["","2027 changes: read the delta list, then new-in-2027 questions","2027 changes: new-in-2027 questions and flashcards","Timed mixed set of 50 questions","Timed mixed set of 50 questions","Miss log review"][dow]; }
+    if(w===27){ return dow===5 ? "Rest. You are ready." : "Light review: mind maps and your miss log. No new material."; }
+    return ["","Practice exam block 1 of 3 (about 45 questions)","Practice exam block 2 of 3","Practice exam block 3 of 3","Review every miss from this week's exam","Focused set on this week's weakest domain"][dow];
+  }
+
+  // ---------- router ----------
+  var routes = {dash:viewDash, plan:viewPlan, obj:viewObj, quiz:viewQuizSetup, miss:viewMiss, cards:viewCards, about:viewAbout};
+  function go(r){
+    document.querySelectorAll("nav button").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-route")===r); });
+    (routes[r]||viewDash)(); window.scrollTo(0,0);
+  }
+  document.querySelectorAll("nav button").forEach(function(b){ b.addEventListener("click", function(){ go(b.getAttribute("data-route")); }); });
+
+  // ---------- Today ----------
+  function domStats(){
+    var r={}; for(var i=1;i<=8;i++) r[i]={seen:0,correct:0};
+    Q.forEach(function(q){ var a=S.answers[q.id]; if(a){ r[q.domain].seen+=a.seen; r[q.domain].correct+=a.correct; } });
+    return r;
+  }
+  function viewDash(){
+    var now=new Date(), w=weekOf(now), dow=now.getDay();
+    var h='<h1>Today</h1><p class="lede">One hour a day, Monday through Friday. Everything here is saved in your browser only.</p>';
+    if(w<1){
+      h+='<div class="card today"><div class="when">Plan starts '+esc(fmt(PLAN_START))+'</div><div class="what">Week 1 begins Monday: baseline self-rating and diagnostic.</div><div class="muted">Good time to skim the Objectives tab and the 2027 changes.</div></div>';
+    } else if(w>WEEKS){
+      h+='<div class="card today"><div class="when">Plan complete</div><div class="what">You have passed week 27. Book the exam if the readiness bar is met.</div></div>';
+    } else {
+      var ph=phaseOf(w);
+      h+='<div class="card today"><div class="when">Week '+w+' of '+WEEKS+' · '+esc(ph.name)+' · '+esc(now.toLocaleDateString(undefined,{weekday:"long"}))+'</div>'+
+        '<div class="what">'+esc(session(w,dow))+'</div><div class="muted">This week: '+esc(focusOf(w))+'</div></div>';
+    }
+    var seen=0,cor=0; for(var id in S.answers){ seen+=S.answers[id].seen; cor+=S.answers[id].correct; }
+    var all=allObjectives(), rated=all.filter(function(x){ return S.ratings[x.o.n]; }).length;
+    var weak=all.filter(function(x){ return S.ratings[x.o.n]===1; }).length;
+    var dk=S.misses.filter(function(m){return m.kind==="dk";}).length, eng=S.misses.filter(function(m){return m.kind==="eng";}).length;
+    h+='<div class="card"><div class="stat-grid">'+
+      '<div class="stat"><div class="v">'+(seen?Math.round(100*cor/seen):0)+'%</div><div class="k">Accuracy ('+seen+' answered)</div></div>'+
+      '<div class="stat"><div class="v">'+rated+'/'+all.length+'</div><div class="k">Objectives rated</div></div>'+
+      '<div class="stat"><div class="v">'+weak+'</div><div class="k">Rated weak</div></div>'+
+      '<div class="stat"><div class="v">'+dk+' / '+eng+'</div><div class="k">Misses: did not know / engineer answer</div></div>'+
+      '</div></div>';
+    if(eng>dk && eng>=5){
+      h+='<div class="card"><h3>Pattern to watch</h3><p class="muted">Most of your misses are engineer answers, not knowledge gaps. Before choosing, ask: what would a risk-focused advisor to management do FIRST? People first, then policy and process, then the technical fix.</p></div>';
+    }
+    var ds=domStats();
+    h+='<div class="card"><h3>Accuracy by domain (app questions)</h3>';
+    OBJ.forEach(function(d){
+      var s=ds[d.n], pct=s.seen?Math.round(100*s.correct/s.seen):0, n=Q.filter(function(q){return q.domain===d.n;}).length;
+      var right = n ? (s.seen? pct+'% of '+s.seen : 'not started') : 'questions arrive before week '+(DOMAIN_WEEK[d.n]-1);
+      h+='<div class="dombar"><div class="lbl"><span>'+esc(dname(d.n))+' <span class="muted">('+d.weight+'%)</span></span><span>'+esc(right)+'</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div></div>';
+    });
+    h+='</div>';
+    app.innerHTML=h;
+  }
+
+  // ---------- Plan ----------
+  function viewPlan(){
+    var cur=weekOf(new Date());
+    var h='<h1>27-week plan</h1><p class="lede">Monday through Thursday: 20 minutes reading, 40 minutes questions. Friday: miss log and flashcards. Check off each week as you finish it.</p>';
+    h+='<div class="card"><div class="tablewrap"><table class="plan">';
+    for(var w=1;w<=WEEKS;w++){
+      var st=addDays(PLAN_START,(w-1)*7), en=addDays(st,4), ph=phaseOf(w);
+      var cls=(w===cur?"cur ":"")+(S.weeks[w]?"done":"");
+      h+='<tr class="'+cls+'"><td><input type="checkbox" data-wk="'+w+'"'+(S.weeks[w]?' checked':'')+' aria-label="Week '+w+' done"></td>'+
+        '<td class="wk">Week '+w+'</td><td class="dt">'+esc(fmt(st))+' to '+esc(fmt(en))+'</td>'+
+        '<td>'+esc(focusOf(w))+'<div class="phase">'+esc(ph.name)+'</div></td></tr>';
+    }
+    h+='</table></div></div>';
+    h+='<div class="card"><h3>Readiness bar</h3><p class="muted">Three consecutive practice exams at 75% or higher on a quality question bank, with no domain below 65%. Sit two of the six practice exams as one unbroken 3-hour session so exam day is not your first time.</p></div>';
+    app.innerHTML=h;
+    app.querySelectorAll("input[data-wk]").forEach(function(c){ c.addEventListener("change", function(){ var w=c.getAttribute("data-wk"); if(c.checked) S.weeks[w]=true; else delete S.weeks[w]; save(); viewPlan(); }); });
+  }
+
+  // ---------- Objectives ----------
+  var objFilter="all";
+  function viewObj(){
+    var h='<h1>2027 objectives</h1><p class="lede">Rate each objective: 1 weak, 2 okay, 3 strong. Items marked <span class="badge new">NEW</span> are new or changed in the 2027 outline.</p>';
+    h+='<div class="card"><div class="row"><label class="fld">Show<select id="of">'+
+      [["all","All objectives"],["new","Changed in 2027"],["unrated","Not yet rated"],["weak","Rated weak"]].map(function(o){ return '<option value="'+o[0]+'"'+(objFilter===o[0]?' selected':'')+'>'+o[1]+'</option>'; }).join("")+
+      '</select></label></div></div>';
+    OBJ.forEach(function(d){
+      var list=d.objectives.filter(function(o){
+        if(objFilter==="new") return objHasNew(o);
+        if(objFilter==="unrated") return !S.ratings[o.n];
+        if(objFilter==="weak") return S.ratings[o.n]===1;
+        return true;
+      });
+      if(!list.length) return;
+      h+='<h2>Domain '+d.n+': '+esc(d.name)+' <span class="muted">('+d.weight+'%)</span></h2><div class="card">';
+      list.forEach(function(o){
+        var r=S.ratings[o.n]||0;
+        h+='<div class="obj"><div class="obj-head"><span class="obj-n">'+esc(o.n)+'</span><span class="obj-t">'+esc(o.t)+(objHasNew(o)?' <span class="badge new">NEW</span>':'')+'</span>'+
+          '<span class="rate">'+[1,2,3].map(function(v){ return '<button class="r'+v+(r===v?' on':'')+'" data-o="'+esc(o.n)+'" data-v="'+v+'" aria-label="Rate '+esc(o.n)+' '+v+'">'+v+'</button>'; }).join("")+'</span></div>';
+        if(o.note) h+='<div class="note">2027: '+esc(o.note)+'</div>';
+        if(o.items.length){ h+='<ul>'+o.items.map(function(it){ return '<li'+(isNewItem(it)?' class="n"':'')+'>'+esc(itemText(it))+(isNewItem(it)?' <span class="badge new">NEW</span>':'')+'</li>'; }).join("")+'</ul>'; }
+        h+='</div>';
+      });
+      h+='</div>';
+    });
+    app.innerHTML=h;
+    document.getElementById("of").addEventListener("change", function(e){ objFilter=e.target.value; viewObj(); });
+    app.querySelectorAll(".rate button").forEach(function(b){ b.addEventListener("click", function(){
+      var o=b.getAttribute("data-o"), v=+b.getAttribute("data-v");
+      if(S.ratings[o]===v) delete S.ratings[o]; else S.ratings[o]=v; save();
+      var y=window.scrollY; viewObj(); window.scrollTo(0,y);
+    }); });
+  }
+
+  // ---------- Quiz ----------
+  var quiz=null;
+  function viewQuizSetup(){
+    var h='<h1>Quiz</h1><p class="lede">This bank focuses on what store-bought banks miss: the 2027 changes and manager-mindset scenarios. Use the official practice tests for volume, and log those misses on the Miss log tab.</p>';
+    h+='<div class="card"><div class="row">'+
+      '<label class="fld">Domain<select id="qd"><option value="0">All available</option>'+OBJ.map(function(d){ var n=Q.filter(function(q){return q.domain===d.n;}).length; return '<option value="'+d.n+'"'+(n?'':' disabled')+'>'+esc(dname(d.n))+' ('+(n?n:'coming week '+(DOMAIN_WEEK[d.n]-1))+')</option>'; }).join("")+'</select></label>'+
+      '<label class="fld">Type<select id="qt"><option value="">All types</option><option value="k">Knowledge</option><option value="m">Manager mindset</option></select></label>'+
+      '<label class="fld">Length<select id="ql"><option value="10">10</option><option value="20" selected>20</option><option value="0">All matching</option></select></label>'+
+      '</div><div class="row" style="margin-top:12px">'+
+      '<label class="chk"><input type="checkbox" id="qn"> New in 2027 only</label>'+
+      '<label class="chk"><input type="checkbox" id="qr"> Review queue (last answer wrong)</label>'+
+      '<label class="chk"><input type="checkbox" id="qf"> Flagged only</label>'+
+      '</div><div class="row" style="margin-top:8px"><button class="btn primary" id="qs">Start</button><span class="muted" id="qc"></span></div></div>';
+    var fl=Object.keys(S.flags);
+    if(fl.length){
+      h+='<div class="card"><h3>Flagged questions ('+fl.length+')</h3><p class="muted" style="margin-bottom:8px">Questions you marked as unclear or wrong. Each one is a fix for the next content batch.</p>';
+      fl.forEach(function(id){ var q=Q.filter(function(x){return String(x.id)===id;})[0]; if(!q) return;
+        h+='<div class="obj"><div class="obj-head"><span class="obj-n">'+esc(q.obj)+'</span><span class="obj-t">'+esc(q.q)+(S.flags[id]?'<br><span class="muted">Note: '+esc(S.flags[id])+'</span>':'')+'</span><button class="link" data-unflag="'+esc(id)+'">Unflag</button></div></div>'; });
+      h+='</div>';
+    }
+    app.innerHTML=h;
+    function pool(){
+      var d=+document.getElementById("qd").value, t=document.getElementById("qt").value;
+      var nw=document.getElementById("qn").checked, rv=document.getElementById("qr").checked, ff=document.getElementById("qf").checked;
+      return Q.filter(function(q){
+        if(d && q.domain!==d) return false;
+        if(t && q.type!==t) return false;
+        if(nw && !q.new2027) return false;
+        if(rv && !(S.answers[q.id] && S.answers[q.id].last===false)) return false;
+        if(ff && !(String(q.id) in S.flags)) return false;
+        return true;
+      });
+    }
+    function count(){ document.getElementById("qc").textContent=pool().length+" questions match"; }
+    ["qd","qt","qn","qr","qf"].forEach(function(id){ document.getElementById(id).addEventListener("change", count); });
+    count();
+    document.getElementById("qs").addEventListener("click", function(){
+      var p=shuffle(pool()), n=+document.getElementById("ql").value;
+      if(!p.length){ document.getElementById("qc").textContent="No questions match those filters."; return; }
+      if(n) p=p.slice(0,n);
+      quiz={list:p, i:0, right:0, misses:{dk:0,eng:0}};
+      showQ();
+    });
+    app.querySelectorAll("[data-unflag]").forEach(function(b){ b.addEventListener("click", function(){ delete S.flags[b.getAttribute("data-unflag")]; save(); viewQuizSetup(); }); });
+  }
+  function showQ(){
+    var q=quiz.list[quiz.i], order=shuffle([0,1,2,3]);
+    var h='<div class="progress-line" style="margin-top:24px"><div class="p" style="width:'+Math.round(100*quiz.i/quiz.list.length)+'%"></div></div>';
+    h+='<div class="card"><div class="qmeta"><span class="badge">D'+q.domain+' · '+esc(q.obj)+'</span>'+
+      (q.type==="m"?'<span class="badge mind">MANAGER MINDSET</span>':'')+(q.new2027?'<span class="badge new">NEW IN 2027</span>':'')+
+      '<span class="sp">'+(quiz.i+1)+' of '+quiz.list.length+'</span></div>'+
+      '<div class="qtext">'+esc(q.q)+'</div><div id="opts">'+
+      order.map(function(oi){ return '<button class="opt" data-oi="'+oi+'">'+esc(q.options[oi])+'</button>'; }).join("")+
+      '</div><div id="after"></div><div class="row" style="margin-top:4px"><button class="link" id="flag">'+(String(q.id) in S.flags?'Flagged':'Flag this question')+'</button></div></div>';
+    app.innerHTML=h;
+    app.querySelectorAll(".opt").forEach(function(b){ b.addEventListener("click", function(){ answer(q, +b.getAttribute("data-oi")); }); });
+    document.getElementById("flag").addEventListener("click", function(){
+      var note=window.prompt("What is wrong or unclear about this question? (optional)", S.flags[q.id]||"");
+      if(note===null) return; S.flags[q.id]=note.trim(); save(); this.textContent="Flagged";
+    });
+  }
+  function answer(q, oi){
+    var ok = oi===q.answer;
+    var a=S.answers[q.id]||{seen:0,correct:0}; a.seen++; if(ok) a.correct++; a.last=ok; S.answers[q.id]=a; save();
+    if(ok) quiz.right++;
+    app.querySelectorAll(".opt").forEach(function(b){ var i=+b.getAttribute("data-oi"); b.disabled=true; if(i===q.answer) b.classList.add("correct"); else if(i===oi) b.classList.add("wrong"); });
+    var h='<div class="explain"><b>'+(ok?'Correct.':'Not quite.')+'</b> '+esc(q.explain)+'</div>';
+    if(!ok){
+      h+='<div class="why" id="why"><p><b>Why did you miss it?</b> Logging this is the most useful part of a miss.</p><div class="row">'+
+        '<button class="btn small" data-k="dk">I did not know it</button><button class="btn small" data-k="eng">I knew it, picked the engineer answer</button></div></div>';
+    }
+    h+='<button class="btn primary" id="next">'+(quiz.i+1<quiz.list.length?'Next question':'See results')+'</button>';
+    document.getElementById("after").innerHTML=h;
+    if(!ok){
+      app.querySelectorAll("#why button").forEach(function(b){ b.addEventListener("click", function(){
+        var k=b.getAttribute("data-k");
+        S.misses.unshift({ts:Date.now(), src:"This app", qid:q.id, domain:q.domain, obj:q.obj, kind:k, note:q.q.slice(0,140)}); save();
+        quiz.misses[k]++;
+        document.getElementById("why").innerHTML='<p class="muted">Logged as '+(k==="dk"?'"did not know."':'"engineer answer."')+'</p>';
+      }); });
+    }
+    document.getElementById("next").addEventListener("click", function(){ quiz.i++; if(quiz.i<quiz.list.length) showQ(); else showResults(); });
+  }
+  function showResults(){
+    var pct=Math.round(100*quiz.right/quiz.list.length);
+    var h='<h1>Results</h1><div class="card center"><div class="stat-grid">'+
+      '<div class="stat"><div class="v">'+pct+'%</div><div class="k">Score</div></div>'+
+      '<div class="stat"><div class="v">'+quiz.right+'/'+quiz.list.length+'</div><div class="k">Correct</div></div>'+
+      '<div class="stat"><div class="v">'+quiz.misses.dk+' / '+quiz.misses.eng+'</div><div class="k">Did not know / engineer</div></div>'+
+      '</div></div><div class="row"><button class="btn primary" id="again">New quiz</button><button class="btn" id="tomiss">Open miss log</button></div>';
+    app.innerHTML=h;
+    document.getElementById("again").addEventListener("click", function(){ go("quiz"); });
+    document.getElementById("tomiss").addEventListener("click", function(){ go("miss"); });
+  }
+
+  // ---------- Miss log ----------
+  var missFilter={domain:0, kind:""};
+  function viewMiss(){
+    var h='<h1>Miss log</h1><p class="lede">Every miss, from this app or from any outside question bank, tagged by why you missed it. "Engineer answer" misses are the ones that fail experienced candidates.</p>';
+    h+='<div class="card"><h3>Log a miss from another source</h3><div class="row">'+
+      '<label class="fld">Source<input type="text" id="ms" placeholder="e.g., Official Practice Tests, ch. 3" style="min-width:220px"></label>'+
+      '<label class="fld">Domain<select id="md">'+OBJ.map(function(d){ return '<option value="'+d.n+'">D'+d.n+'</option>'; }).join("")+'</select></label>'+
+      '<label class="fld">Objective<select id="mo"></select></label>'+
+      '<label class="fld">Why<select id="mk"><option value="dk">Did not know</option><option value="eng">Engineer answer</option></select></label>'+
+      '</div><label class="fld" style="margin-top:10px">Note (what the right reasoning was)<textarea id="mn"></textarea></label>'+
+      '<div class="row" style="margin-top:10px"><button class="btn primary" id="madd">Add to log</button></div></div>';
+    var list=S.misses.filter(function(m){ return (!missFilter.domain || m.domain===missFilter.domain) && (!missFilter.kind || m.kind===missFilter.kind); });
+    var byDom={}; S.misses.forEach(function(m){ byDom[m.domain]=(byDom[m.domain]||0)+1; });
+    var top=Object.keys(byDom).sort(function(a,b){return byDom[b]-byDom[a];})[0];
+    h+='<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">'+S.misses.length+' misses logged'+(top?' · most in D'+esc(top):'')+'</h3>'+
+      '<div class="row"><select id="fd"><option value="0">All domains</option>'+OBJ.map(function(d){ return '<option value="'+d.n+'"'+(missFilter.domain===d.n?' selected':'')+'>D'+d.n+'</option>'; }).join("")+'</select>'+
+      '<select id="fk"><option value="">All reasons</option><option value="dk"'+(missFilter.kind==="dk"?' selected':'')+'>Did not know</option><option value="eng"'+(missFilter.kind==="eng"?' selected':'')+'>Engineer answer</option></select></div></div>';
+    if(list.length){
+      h+='<div class="tablewrap" style="margin-top:10px"><table class="miss"><tr><th>Date</th><th>Obj</th><th>Why</th><th>Source and note</th><th></th></tr>';
+      list.forEach(function(m){
+        h+='<tr><td>'+esc(new Date(m.ts).toLocaleDateString(undefined,{month:"short",day:"numeric"}))+'</td><td>'+esc(m.obj||("D"+m.domain))+'</td>'+
+          '<td class="'+(m.kind==="dk"?'kind-dk">Did not know':'kind-eng">Engineer')+'</td>'+
+          '<td><b>'+esc(m.src)+'</b><br>'+esc(m.note)+'</td><td><button class="link" data-del="'+m.ts+'" aria-label="Remove entry">Remove</button></td></tr>';
+      });
+      h+='</table></div>';
+    } else { h+='<p class="muted" style="margin-top:10px">Nothing logged yet.</p>'; }
+    h+='</div>';
+    h+='<div class="card"><h3>Back up your progress</h3><p class="muted" style="margin-bottom:10px">Ratings, weeks, answers, flags, and the miss log live in this browser only. Export a file now and then, especially before clearing browser data.</p>'+
+      '<div class="row"><button class="btn small" id="exp">Export progress</button><label class="btn small" style="display:inline-block;cursor:pointer">Import progress<input type="file" id="imp" accept="application/json" hidden></label><span class="muted" id="impmsg"></span></div></div>';
+    app.innerHTML=h;
+    var md=document.getElementById("md"), mo=document.getElementById("mo");
+    function fillObj(){ var d=DOM[+md.value]; mo.innerHTML=d.objectives.map(function(o){ return '<option value="'+esc(o.n)+'">'+esc(o.n)+'</option>'; }).join(""); }
+    md.addEventListener("change", fillObj); fillObj();
+    document.getElementById("madd").addEventListener("click", function(){
+      S.misses.unshift({ts:Date.now(), src:document.getElementById("ms").value.trim()||"Outside source", domain:+md.value, obj:mo.value, kind:document.getElementById("mk").value, note:document.getElementById("mn").value.trim()});
+      save(); viewMiss();
+    });
+    document.getElementById("fd").addEventListener("change", function(e){ missFilter.domain=+e.target.value; viewMiss(); });
+    document.getElementById("fk").addEventListener("change", function(e){ missFilter.kind=e.target.value; viewMiss(); });
+    app.querySelectorAll("[data-del]").forEach(function(b){ b.addEventListener("click", function(){
+      if(!window.confirm("Remove this entry from the miss log?")) return;
+      var ts=+b.getAttribute("data-del"); S.misses=S.misses.filter(function(m){ return m.ts!==ts; }); save(); viewMiss();
+    }); });
+    document.getElementById("exp").addEventListener("click", function(){
+      var blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"}), a=document.createElement("a");
+      a.href=URL.createObjectURL(blob); a.download="cissp2027-progress-"+new Date().toISOString().slice(0,10)+".json"; document.body.appendChild(a); a.click(); a.remove();
+    });
+    document.getElementById("imp").addEventListener("change", function(e){
+      var f=e.target.files[0]; if(!f) return; var rd=new FileReader();
+      rd.onload=function(){ try{ var p=JSON.parse(rd.result); if(!p || !Array.isArray(p.misses)) throw 0;
+        if(!window.confirm("Replace your current progress with this file?")) return;
+        var b=blank(); for(var k in b){ S[k]= p[k]!=null ? p[k] : b[k]; } save(); viewMiss();
+      }catch(err){ document.getElementById("impmsg").textContent="That file is not a progress export."; } };
+      rd.readAsText(f);
+    });
+  }
+
+  // ---------- Flashcards ----------
+  var deck=null, cardIdx=0, flipped=false, cardFilter={domain:0, nw:false};
+  function buildDeck(){ deck=shuffle(FC.filter(function(c){ return (!cardFilter.domain || c.domain===cardFilter.domain) && (!cardFilter.nw || c.new2027); })); cardIdx=0; flipped=false; }
+  function viewCards(){
+    if(!deck) buildDeck();
+    var h='<h1>Flashcards</h1><p class="lede">ISC2 vocabulary and the terms new in 2027. Click the card or press space to flip; use the arrow keys to move.</p>';
+    h+='<div class="card"><div class="row"><label class="fld">Domain<select id="cd"><option value="0">All domains</option>'+OBJ.map(function(d){ var n=FC.filter(function(c){return c.domain===d.n;}).length; return '<option value="'+d.n+'"'+(cardFilter.domain===d.n?' selected':'')+'>D'+d.n+' ('+n+')</option>'; }).join("")+'</select></label>'+
+      '<label class="chk"><input type="checkbox" id="cn"'+(cardFilter.nw?' checked':'')+'> New in 2027 only</label></div></div>';
+    if(!deck.length){ h+='<p class="muted">No cards match.</p>'; app.innerHTML=h; bindCardFilters(); return; }
+    var c=deck[cardIdx];
+    h+='<div class="flash"><div class="flash-inner" id="fc"><div class="tl"><span class="badge">D'+c.domain+'</span>'+(c.new2027?'<span class="badge new">NEW</span>':'')+'</div>'+
+      (flipped?'<div class="def">'+esc(c.def)+'</div>':'<div class="term">'+esc(c.term)+'</div>')+
+      '<div class="hint">'+(flipped?'Definition':'Term')+' · '+(cardIdx+1)+' of '+deck.length+'</div></div></div>'+
+      '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="prev">Previous</button><button class="btn primary" id="flip">Flip</button><button class="btn" id="nxt">Next</button></div>';
+    app.innerHTML=h; bindCardFilters();
+    document.getElementById("fc").addEventListener("click", flip);
+    document.getElementById("flip").addEventListener("click", flip);
+    document.getElementById("prev").addEventListener("click", function(){ move(-1); });
+    document.getElementById("nxt").addEventListener("click", function(){ move(1); });
+  }
+  function bindCardFilters(){
+    document.getElementById("cd").addEventListener("change", function(e){ cardFilter.domain=+e.target.value; buildDeck(); viewCards(); });
+    document.getElementById("cn").addEventListener("change", function(e){ cardFilter.nw=e.target.checked; buildDeck(); viewCards(); });
+  }
+  function flip(){ flipped=!flipped; viewCards(); }
+  function move(n){ if(!deck.length) return; cardIdx=(cardIdx+n+deck.length)%deck.length; flipped=false; viewCards(); }
+  document.addEventListener("keydown", function(e){
+    if(!document.getElementById("fc") || /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if(e.key===" "){ e.preventDefault(); flip(); } else if(e.key==="ArrowRight") move(1); else if(e.key==="ArrowLeft") move(-1);
+  });
+
+  // ---------- About ----------
+  function viewAbout(){
+    var nq=Q.length, nn=Q.filter(function(q){return q.new2027;}).length, nm=Q.filter(function(q){return q.type==="m";}).length;
+    app.innerHTML='<h1>About</h1><div class="card about">'+
+      '<p>A study companion for the CISSP exam outline effective <b>April 15, 2027</b>. It is built for experienced practitioners, where the gap is usually exam reasoning and the 2027 changes rather than raw knowledge.</p>'+
+      '<ul><li><b>Plan:</b> 27 weeks at one hour a day, Monday through Friday. The full plan is in <a href="https://github.com/cloudanimal/cissp-2027-prep/blob/main/STUDY-PLAN.md" target="_blank" rel="noopener">STUDY-PLAN.md</a>.</li>'+
+      '<li><b>Objectives:</b> every 2027 objective with the changes marked, for self-rating.</li>'+
+      '<li><b>Questions:</b> '+nq+' so far ('+nn+' on 2027 changes, '+nm+' manager-mindset scenarios). New batches arrive one domain at a time, ahead of the plan schedule. Answer options are shuffled each time.</li>'+
+      '<li><b>Miss log:</b> tracks why you miss, including misses from outside question banks.</li>'+
+      '<li><b>Flashcards:</b> '+FC.length+' cards on ISC2 vocabulary and 2027 terms.</li></ul>'+
+      '<p>This is not a replacement for a full question bank or the official study guide. Use those for volume; use this for the 2027 deltas and for training the manager mindset.</p>'+
+      '<p><b>Privacy:</b> no accounts, no analytics, no network calls. Progress is stored in your browser and can be exported from the Miss log tab.</p>'+
+      '<p><b>Disclaimer:</b> unofficial and not affiliated with or endorsed by ISC2. All questions are original. The objective list paraphrases the public ISC2 exam outline; always check the official outline for the authoritative scope.</p></div>';
+  }
+
+  go("dash");
+})();
+</script>
+</body>
+</html>
