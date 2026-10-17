@@ -156,6 +156,13 @@
 
 <script src="data/objectives.js"></script>
 <script src="data/questions.js"></script>
+<script src="data/questions-d1.js"></script>
+<script src="data/questions-d2.js"></script>
+<script src="data/questions-d4.js"></script>
+<script src="data/questions-d5.js"></script>
+<script src="data/questions-d6.js"></script>
+<script src="data/questions-d7.js"></script>
+<script src="data/questions-d8.js"></script>
 <script src="data/flashcards.js"></script>
 <script>
 (function () {
@@ -168,7 +175,6 @@
   var PLAN_START = new Date(2026, 9, 19); // Monday, October 19, 2026
   var WEEKS = 27;
   var DOM = {}; OBJ.forEach(function(d){ DOM[d.n] = d; });
-  var DOMAIN_WEEK = {3:2, 4:4, 8:6, 5:8, 2:10, 1:11, 6:13, 7:14}; // first plan week for each domain
 
   // ---------- helpers ----------
   function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
@@ -257,7 +263,7 @@
     h+='<div class="card"><h3>Accuracy by domain (app questions)</h3>';
     OBJ.forEach(function(d){
       var s=ds[d.n], pct=s.seen?Math.round(100*s.correct/s.seen):0, n=Q.filter(function(q){return q.domain===d.n;}).length;
-      var right = n ? (s.seen? pct+'% of '+s.seen : 'not started') : 'questions arrive before week '+(DOMAIN_WEEK[d.n]-1);
+      var right = s.seen ? pct+'% of '+s.seen : n+' questions, not started';
       h+='<div class="dombar"><div class="lbl"><span>'+esc(dname(d.n))+' <span class="muted">('+d.weight+'%)</span></span><span>'+esc(right)+'</span></div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div></div>';
     });
     h+='</div>';
@@ -322,7 +328,7 @@
   function viewQuizSetup(){
     var h='<h1>Quiz</h1><p class="lede">This bank focuses on what store-bought banks miss: the 2027 changes and manager-mindset scenarios. Use the official practice tests for volume, and log those misses on the Miss log tab.</p>';
     h+='<div class="card"><div class="row">'+
-      '<label class="fld">Domain<select id="qd"><option value="0">All available</option>'+OBJ.map(function(d){ var n=Q.filter(function(q){return q.domain===d.n;}).length; return '<option value="'+d.n+'"'+(n?'':' disabled')+'>'+esc(dname(d.n))+' ('+(n?n:'coming week '+(DOMAIN_WEEK[d.n]-1))+')</option>'; }).join("")+'</select></label>'+
+      '<label class="fld">Domain<select id="qd"><option value="0">All available</option>'+OBJ.map(function(d){ var n=Q.filter(function(q){return q.domain===d.n;}).length; return '<option value="'+d.n+'"'+(n?'':' disabled')+'>'+esc(dname(d.n))+' ('+n+')</option>'; }).join("")+'</select></label>'+
       '<label class="fld">Type<select id="qt"><option value="">All types</option><option value="k">Knowledge</option><option value="m">Manager mindset</option></select></label>'+
       '<label class="fld">Length<select id="ql"><option value="10">10</option><option value="20" selected>20</option><option value="0">All matching</option></select></label>'+
       '</div><div class="row" style="margin-top:12px">'+
@@ -332,7 +338,7 @@
       '</div><div class="row" style="margin-top:8px"><button class="btn primary" id="qs">Start</button><span class="muted" id="qc"></span></div></div>';
     var fl=Object.keys(S.flags);
     if(fl.length){
-      h+='<div class="card"><h3>Flagged questions ('+fl.length+')</h3><p class="muted" style="margin-bottom:8px">Questions you marked as unclear or wrong. Each one is a fix for the next content batch.</p>';
+      h+='<div class="card"><h3>Flagged questions ('+fl.length+')</h3><p class="muted" style="margin-bottom:8px">Questions you marked as unclear or wrong, with your notes, so they can be corrected.</p>';
       fl.forEach(function(id){ var q=Q.filter(function(x){return String(x.id)===id;})[0]; if(!q) return;
         h+='<div class="obj"><div class="obj-head"><span class="obj-n">'+esc(q.obj)+'</span><span class="obj-t">'+esc(q.q)+(S.flags[id]?'<br><span class="muted">Note: '+esc(S.flags[id])+'</span>':'')+'</span><button class="link" data-unflag="'+esc(id)+'">Unflag</button></div></div>'; });
       h+='</div>';
@@ -507,7 +513,7 @@
       '<p>A study companion for the CISSP exam outline effective <b>April 15, 2027</b>. It is built for experienced practitioners, where the gap is usually exam reasoning and the 2027 changes rather than raw knowledge.</p>'+
       '<ul><li><b>Plan:</b> 27 weeks at one hour a day, Monday through Friday. The full plan is in <a href="https://github.com/cloudanimal/cissp-2027-prep/blob/main/STUDY-PLAN.md" target="_blank" rel="noopener">STUDY-PLAN.md</a>.</li>'+
       '<li><b>Objectives:</b> every 2027 objective with the changes marked, for self-rating.</li>'+
-      '<li><b>Questions:</b> '+nq+' so far ('+nn+' on 2027 changes, '+nm+' manager-mindset scenarios). New batches arrive one domain at a time, ahead of the plan schedule. Answer options are shuffled each time.</li>'+
+      '<li><b>Questions:</b> '+nq+' so far ('+nn+' on 2027 changes, '+nm+' manager-mindset scenarios). Answer options are shuffled each time.</li>'+
       '<li><b>Miss log:</b> tracks why you miss, including misses from outside question banks.</li>'+
       '<li><b>Flashcards:</b> '+FC.length+' cards on ISC2 vocabulary and 2027 terms.</li></ul>'+
       '<p>This is not a replacement for a full question bank or the official study guide. Use those for volume; use this for the 2027 deltas and for training the manager mindset.</p>'+

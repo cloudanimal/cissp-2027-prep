@@ -121,30 +121,17 @@ Prefer editions labeled for the April 2027 outline. Several will be published be
 
 A static, zero-dependency browser app in the same style as security-plus-prep, planned as a public repo, **cloudanimal/cissp-2027-prep**, on GitHub Pages. It fills the gaps that commercial question banks leave instead of competing with them.
 
-**In v1:**
+**What it includes:**
 
 - **Today view:** the current week, phase, and the session for today.
 - **Plan tracker:** all 27 weeks with dates, focus, and a done checkbox.
 - **Objective checklist:** every 2027 objective with the changes marked, and a 1 to 3 self-rating.
-- **Question bank, batch 1 (Domain 3):** 50 original questions, about half on 2027 changes and nine manager-mindset scenarios. Options are shuffled every time. A flag button marks anything unclear or wrong.
+- **Question bank:** 335 original questions across all eight domains, sized to the 2027 weights, covering every objective. 83 are on 2027 changes and 55 are manager-mindset scenarios. Options are shuffled every time. A flag button marks anything unclear or wrong.
 - **Miss log:** misses from this app and from outside banks, each tagged "did not know" or "engineer answer," with filters and a dashboard warning when engineer answers dominate.
 - **Flashcards:** 85 cards on ISC2 vocabulary and 2027 terms across all eight domains.
 - **Backup:** export and import of all progress as a JSON file.
 - **Privacy:** fully local, no network calls.
 
-**Question batches, each landing a week before its domain starts:**
-
-| Batch | Domain | Ready by |
-|---|---|---|
-| 1 | D3 Architecture and Engineering | Done (v1) |
-| 2 | D4 Communication and Network | Nov 2 |
-| 3 | D8 Software Development | Nov 16 |
-| 4 | D5 IAM | Nov 30 |
-| 5 | D2 Asset Security | Dec 14 |
-| 6 | D1 Governance and Risk | Dec 21 |
-| 7 | D6 Assessment and Testing | Jan 4 |
-| 8 | D7 Security Operations | Jan 11 |
-
 **Deliberately left out:** a practice exam mode. A homemade bank would start repeating questions by the third full exam and inflate scores. Phase 3 uses the official practice tests.
 
-**Before announcing the repo:** spot-check at least the first two batches. Flagged questions get fixed in the next batch.
+**Before announcing the repo:** spot-check at least a couple of domains. Flagged questions get corrected as they come up.

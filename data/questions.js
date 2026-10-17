@@ -1,7 +1,7 @@
 // CISSP 2027 practice question bank. All content is original; none of it is real exam material.
 // Schema: { id, domain (1-8), obj ("3.6"), type ("k" knowledge | "m" manager mindset),
 //           new2027 (bool), q, options[4], answer (index), explain }
-// Batches land one domain at a time, ahead of the study plan schedule.
+// Domain 3 lives here; the other domains are in questions-d1.js through questions-d8.js.
 window.CISSP_QUESTIONS = [
 // ---------------- Domain 3: Security Architecture and Engineering (batch 1) ----------------
 {id:301,domain:3,obj:"3.1",type:"k",new2027:true,q:"Opening the root key vault requires two authorized custodians to be physically present at the same time. Which design principle does this implement?",options:["Separation of duties","Two-person integrity","Rotation of duties","Need to know"],answer:1,explain:"Two-person integrity requires two authorized people together for a single sensitive action. Separation of duties splits a process into parts performed by different people, which is related but not the same control."},

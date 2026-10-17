@@ -11,7 +11,7 @@ It is built for experienced practitioners. For them, the gap is usually exam rea
 - **Today:** the current week of a 27-week plan and the session for today (one hour a day, Monday through Friday)
 - **Plan:** every week with dates, focus, and progress
 - **Objectives:** all 62 objectives from the 2027 outline, with new and changed items marked, for self-rating
-- **Quiz:** original questions focused on the 2027 changes and manager-mindset scenarios, released one domain at a time
+- **Quiz:** about 330 original questions across all eight domains, weighted to the 2027 domain percentages, with emphasis on the 2027 changes and manager-mindset scenarios
 - **Miss log:** tags every miss, including misses from outside question banks, as "did not know" or "engineer answer"
 - **Flashcards:** ISC2 vocabulary and the terms new in 2027
 
@@ -23,7 +23,7 @@ There are no accounts, no analytics, and no network calls. Progress is stored in
 
 ## Running locally
 
-Open `index.html` in a browser. There is no build step. Content lives in `data/objectives.js`, `data/questions.js`, and `data/flashcards.js`.
+Open `index.html` in a browser. There is no build step. Content lives in `data/objectives.js`, `data/questions*.js` (one file per domain), and `data/flashcards.js`.
 
 ## Disclaimer
 
